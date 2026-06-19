@@ -11,23 +11,20 @@ uploaded_file = st.file_uploader("Envie o arquivo de solicitações (Excel)", ty
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
 
-    # Transformar colunas de disciplinas em formato longo
-    disciplinas = []
-    motivo_cols = [col for col in df.columns if "Motivo" in col]  # todas as colunas de motivo
-    disc_cols = [col for col in df.columns if "Disciplina" in col]  # todas as colunas de disciplina
+    # Lista de colunas de disciplinas
+    disciplina_cols = [col for col in df.columns if "Disciplina" in col]
 
-    # Garantir que temos pares disciplina/motivo
-    for disc_col in disc_cols:
-        for motivo_col in motivo_cols:
-            # Seleciona apenas linhas onde a disciplina está preenchida
-            temp = df[[
-                "Matrícula", "Nome do Aluno", "Código Turma",
-                "Curso", "Ano Letivo", "Etapa", disc_col, motivo_col
-            ]].copy()
-            temp = temp.rename(columns={disc_col: "Disciplina", motivo_col: "Tipo"})
-            temp = temp[temp["Disciplina"].notna()]  # remove vazios
-            disciplinas.append(temp)
-            break  # usa o primeiro motivo encontrado (já que todos têm o mesmo nome)
+    # Para cada coluna de disciplina, pegar o motivo da mesma linha
+    disciplinas = []
+    for col_disc in disciplina_cols:
+        # sempre usar a coluna "Motivo Solicitação"
+        temp = df[[
+            "Matrícula", "Nome do Aluno", "Código Turma",
+            "Curso", "Ano Letivo", "Etapa", col_disc, "Motivo Solicitação"
+        ]].copy()
+        temp = temp.rename(columns={col_disc: "Disciplina", "Motivo Solicitação": "Tipo"})
+        temp = temp[temp["Disciplina"].notna()]  # remove linhas vazias
+        disciplinas.append(temp)
 
     # Concatenar todas as solicitações
     if disciplinas:
