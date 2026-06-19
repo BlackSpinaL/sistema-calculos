@@ -8,14 +8,14 @@ st.title("📊 Sistema de Cálculos - Solicitações")
 uploaded_file = st.file_uploader("Envie o arquivo de solicitações (Excel)", type=["xlsx"])
 
 if uploaded_file:
-    df = pd.read_excel(uploaded_file)
+    # Usar a segunda linha como cabeçalho
+    df = pd.read_excel(uploaded_file, header=1)
 
     # Identificar colunas de disciplina e motivo
     disciplina_cols = [col for col in df.columns if "Disciplina" in col]
     motivo_cols = [col for col in df.columns if "Motivo" in col]
 
     disciplinas = []
-    # Parear cada disciplina com o motivo correspondente pelo índice
     for i, col_disc in enumerate(disciplina_cols):
         if i < len(motivo_cols):
             col_motivo = motivo_cols[i]
