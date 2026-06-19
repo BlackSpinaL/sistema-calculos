@@ -63,12 +63,16 @@ if uploaded_file:
     totais_disciplina = filtrado.groupby("Disciplina").size().reset_index(name="TotalDisciplina")
     resultado = resultado.merge(totais_disciplina, on="Disciplina", how="left")
 
-    # Mostrar resultados
+    # Mostrar resultados com cabeçalhos centralizados
     st.subheader("Resultados filtrados")
-    st.dataframe(resultado)
+    st.dataframe(resultado.style.set_table_styles(
+        [{'selector': 'th', 'props': [('text-align', 'center')]}]
+    ))
 
     st.subheader("Totais por situação (Melhoria ou Recuperação)")
-    st.dataframe(totais_situacao)
+    st.dataframe(totais_situacao.style.set_table_styles(
+        [{'selector': 'th', 'props': [('text-align', 'center')]}]
+    ))
 
     st.metric("TOTAL GERAL", total_geral)
 
