@@ -11,7 +11,7 @@ if uploaded_file:
     # Pular a primeira linha (título) e usar a segunda como cabeçalho
     df = pd.read_excel(uploaded_file, header=1)
 
-    # Remover colunas sem nome
+    # Remover colunas sem nome (Unnamed)
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 
     # Identificar colunas de disciplina e motivo
