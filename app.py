@@ -10,14 +10,12 @@ uploaded_file = st.file_uploader("Envie o arquivo de solicitações (Excel)", ty
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
 
-    # Identificar todas as colunas de disciplina
+    # Identificar colunas de disciplina e motivo
     disciplina_cols = [col for col in df.columns if "Disciplina" in col]
-
-    # Identificar todas as colunas de motivo (inclui Motivo Solicitação, Motivo Solicitação.1, etc.)
     motivo_cols = [col for col in df.columns if "Motivo" in col]
 
     disciplinas = []
-    # Combinar cada disciplina com o motivo correspondente pelo índice
+    # Parear cada disciplina com o motivo correspondente pelo índice
     for i, col_disc in enumerate(disciplina_cols):
         if i < len(motivo_cols):
             col_motivo = motivo_cols[i]
@@ -32,7 +30,7 @@ if uploaded_file:
     if disciplinas:
         df_long = pd.concat(disciplinas)
     else:
-        st.error("Nenhuma coluna de disciplina encontrada no arquivo enviado.")
+        st.error(f"Colunas encontradas: {df.columns.tolist()}")
         st.stop()
 
     # Filtros
