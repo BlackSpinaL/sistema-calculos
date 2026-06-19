@@ -31,12 +31,18 @@ if uploaded_file:
         st.error(f"Colunas encontradas: {df.columns.tolist()}")
         st.stop()
 
-    # Filtros
+    # Filtros com opções ordenadas
     col1, col2, col3 = st.columns(3)
     with col1:
-        turmas = st.multiselect("Selecione as turmas", df_long["Código Turma"].unique())
+        turmas = st.multiselect(
+            "Selecione as turmas",
+            sorted(df_long["Código Turma"].unique())
+        )
     with col2:
-        segmentos = st.multiselect("Selecione os segmentos", df_long["Curso"].unique())
+        segmentos = st.multiselect(
+            "Selecione os segmentos",
+            sorted(df_long["Curso"].unique())
+        )
     with col3:
         tipo = st.selectbox("Tipo de avaliação", ["Todos", "RECUPERACAO", "MELHORIA DE NOTA"])
 
