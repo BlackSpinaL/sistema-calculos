@@ -8,14 +8,8 @@ st.title("📊 Sistema de Cálculos - Solicitações")
 uploaded_file = st.file_uploader("Envie o arquivo de solicitações (Excel)", type=["xlsx"])
 
 if uploaded_file:
-    # Pular a primeira linha (título) e usar a segunda como cabeçalho
-    df = pd.read_excel(uploaded_file, header=1)
-
-    # Remover colunas sem nome (Unnamed)
-    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-
-    # Mostrar colunas detectadas para conferência
-    st.write("Colunas detectadas:", df.columns.tolist())
+    # Agora os cabeçalhos já estão na primeira linha
+    df = pd.read_excel(uploaded_file)
 
     # Identificar colunas de disciplina e motivo
     disciplina_cols = [col for col in df.columns if "Disciplina" in col]
@@ -36,7 +30,7 @@ if uploaded_file:
     if disciplinas:
         df_long = pd.concat(disciplinas)
     else:
-        st.error("Nenhuma coluna de disciplina encontrada.")
+        st.error(f"Colunas encontradas: {df.columns.tolist()}")
         st.stop()
 
     # Filtros
