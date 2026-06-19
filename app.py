@@ -13,16 +13,21 @@ if uploaded_file:
 
     # Transformar colunas de disciplinas em formato longo
     disciplinas = []
-    for i in range(1, 5):  # até 4 disciplinas
-        col_disc = f"{i}ª Disciplina"
-        col_motivo = "Motivo Solicitação"  # todas as colunas têm o mesmo nome
-        if col_disc in df.columns and col_motivo in df.columns:
+    motivo_cols = [col for col in df.columns if "Motivo" in col]  # todas as colunas de motivo
+    disc_cols = [col for col in df.columns if "Disciplina" in col]  # todas as colunas de disciplina
+
+    # Garantir que temos pares disciplina/motivo
+    for disc_col in disc_cols:
+        for motivo_col in motivo_cols:
+            # Seleciona apenas linhas onde a disciplina está preenchida
             temp = df[[
                 "Matrícula", "Nome do Aluno", "Código Turma",
-                "Curso", "Ano Letivo", "Etapa", col_disc, col_motivo
+                "Curso", "Ano Letivo", "Etapa", disc_col, motivo_col
             ]].copy()
-            temp = temp.rename(columns={col_disc: "Disciplina", col_motivo: "Tipo"})
+            temp = temp.rename(columns={disc_col: "Disciplina", motivo_col: "Tipo"})
+            temp = temp[temp["Disciplina"].notna()]  # remove vazios
             disciplinas.append(temp)
+            break  # usa o primeiro motivo encontrado (já que todos têm o mesmo nome)
 
     # Concatenar todas as solicitações
     if disciplinas:
