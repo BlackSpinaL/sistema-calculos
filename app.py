@@ -15,14 +15,21 @@ if uploaded_file:
     disciplinas = []
     for i in range(1, 5):  # até 4 disciplinas
         col_disc = f"{i}ª Disciplina"
-        col_motivo = "Motivo Solicitação" if i == 1 else f"{i}ª Motivo Solicitação"
+        col_motivo = "Motivo Solicitação"  # todas as colunas têm o mesmo nome
         if col_disc in df.columns and col_motivo in df.columns:
-            temp = df[["Matrícula", "Nome do Aluno", "Código Turma", "Curso", "Ano Letivo", "Etapa", col_disc, col_motivo]].copy()
+            temp = df[[
+                "Matrícula", "Nome do Aluno", "Código Turma",
+                "Curso", "Ano Letivo", "Etapa", col_disc, col_motivo
+            ]].copy()
             temp = temp.rename(columns={col_disc: "Disciplina", col_motivo: "Tipo"})
             disciplinas.append(temp)
 
     # Concatenar todas as solicitações
-    df_long = pd.concat(disciplinas)
+    if disciplinas:
+        df_long = pd.concat(disciplinas)
+    else:
+        st.error("Nenhuma coluna de disciplina encontrada no arquivo enviado.")
+        st.stop()
 
     # Filtros
     col1, col2, col3 = st.columns(3)
@@ -50,4 +57,7 @@ if uploaded_file:
     st.dataframe(resultado)
 
     st.subheader("Gráfico por disciplina")
-    st.bar_chart(resultado.set_index("Disciplina")["Total"])
+    if not resultado.empty:
+        st.bar_chart(resultado.set_index("Disciplina")["Total"])
+    else:
+        st.info("Nenhum dado encontrado para os filtros selecionados.")
