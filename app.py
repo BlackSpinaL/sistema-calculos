@@ -14,6 +14,9 @@ if uploaded_file:
     # Remover colunas sem nome (Unnamed)
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 
+    # Mostrar colunas detectadas para conferência
+    st.write("Colunas detectadas:", df.columns.tolist())
+
     # Identificar colunas de disciplina e motivo
     disciplina_cols = [col for col in df.columns if "Disciplina" in col]
     motivo_cols = [col for col in df.columns if "Motivo" in col]
@@ -33,7 +36,7 @@ if uploaded_file:
     if disciplinas:
         df_long = pd.concat(disciplinas)
     else:
-        st.error(f"Colunas encontradas: {df.columns.tolist()}")
+        st.error("Nenhuma coluna de disciplina encontrada.")
         st.stop()
 
     # Filtros
