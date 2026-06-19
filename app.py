@@ -8,7 +8,7 @@ st.title("📊 Sistema de Cálculos - Solicitações")
 uploaded_file = st.file_uploader("Envie o arquivo de solicitações (Excel)", type=["xlsx"])
 
 if uploaded_file:
-    # Usar a segunda linha como cabeçalho
+    # Usar a segunda linha como cabeçalho (header=1)
     df = pd.read_excel(uploaded_file, header=1)
 
     # Identificar colunas de disciplina e motivo
